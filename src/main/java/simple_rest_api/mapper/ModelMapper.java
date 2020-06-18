@@ -21,6 +21,7 @@ public interface ModelMapper {
     static UserDto fromUserToUserDto(User user) {
         return UserDto
                 .builder()
+                .id(user.getId())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .username(user.getUsername())
