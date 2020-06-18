@@ -1,6 +1,7 @@
 package simple_rest_api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import simple_rest_api.exceptions.AppException;
@@ -18,9 +19,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserRegistrationService {
 
+    @Value("${server.port}")
+    private String port;
+
     private final UserRepository userRepository;
     private final CreateUserValidator createUserValidator;
     private final PasswordEncoder passwordEncoder;
+    private final AccountActivationTokenService accountActivationTokenService;
+    private final EmailService emailService;
 
     public Long create(CreateUserDto createUserDto) {
         if (Objects.isNull(createUserDto)) {
@@ -45,6 +51,22 @@ public class UserRegistrationService {
         var insertUser = userRepository.save(user);
         System.out.println("User " + user.getUsername() + " has been added");
 
+        // -------------------------
+        // EMAIL CREATION
+        // -------------------------
+        var tokenWithUser = accountActivationTokenService.prepareToken(insertUser.getId());
+        System.out.println("Account activation token for address " + user.getEmail() + " has been generated");
+
+        var messagePart1 = "Click link to activate account: ";
+        var messagePart2 = "http://localhost:" + port +"/security/account-activation?token=";
+        var messagePart3 = tokenWithUser.getToken();
+        var message = messagePart1 + messagePart2 + messagePart3;
+
+        // -------------------------
+        // EMAIL DELIVERY
+        // -------------------------
+        emailService.send(insertUser.getEmail(), "Account Activation - Advertisement Platform", message);
+        System.out.println("Account activation token for address " + insertUser.getEmail() + " has been sent");
 
         return insertUser.getId();
     }
