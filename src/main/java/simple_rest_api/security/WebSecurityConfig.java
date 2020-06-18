@@ -71,8 +71,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/security/**", "/advertisements/**", "/create/**").permitAll()
-                .antMatchers("/users/**").hasAnyRole("ROLE_ADMIN")
+                //todo make access to /users only for authenticated and authorized users
+                .antMatchers("/security/**", "/advertisements/**", "/create/**", "/users/**").permitAll()
+                /*.antMatchers("/security/**", "/advertisements/**", "/create/**").permitAll()
+                .antMatchers("/users/**").hasAnyRole("ROLE_ADMIN")*/
                 .anyRequest().authenticated();
     }
 }
