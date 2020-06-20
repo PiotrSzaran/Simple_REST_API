@@ -1,6 +1,9 @@
 package simple_rest_api.mapper;
 
+import simple_rest_api.model.Advertisement;
 import simple_rest_api.model.User;
+import simple_rest_api.model.dto.AdvertisementDto;
+import simple_rest_api.model.dto.CreateAdvertisementDto;
 import simple_rest_api.model.dto.CreateUserDto;
 import simple_rest_api.model.dto.UserDto;
 
@@ -29,6 +32,31 @@ public interface ModelMapper {
                 .password(user.getPassword())
                 .role(user.getRole())
                 .enabled(user.getEnabled())
+                .build();
+    }
+
+    static Advertisement fromCreateAdvertisementDtoToAdvertisement(CreateAdvertisementDto createAdvertisementDto) {
+        return Advertisement
+                .builder()
+                .category(createAdvertisementDto.getCategory())
+                .title(createAdvertisementDto.getTitle())
+                .message(createAdvertisementDto.getMessage())
+                .isPromoted(createAdvertisementDto.getIsPromoted())
+                .build();
+    }
+
+    static AdvertisementDto fromAdvertisementToAdvertisementDto(Advertisement advertisement) {
+        return AdvertisementDto
+                .builder()
+                .id(advertisement.getId())
+                .category(advertisement.getCategory())
+                .title(advertisement.getTitle())
+                .message(advertisement.getMessage())
+                .isActivated(advertisement.getIsActivated())
+                .publicationDate(advertisement.getPublicationDate())
+                .isPromoted(advertisement.getIsPromoted())
+                .promotionDate(advertisement.getPromotionDate())
+                .userId(advertisement.getUser().getId())
                 .build();
     }
 }
