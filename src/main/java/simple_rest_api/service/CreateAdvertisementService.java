@@ -48,6 +48,7 @@ public class CreateAdvertisementService {
         var advertisement = ModelMapper.fromCreateAdvertisementDtoToAdvertisement(createAdvertisementDto);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         var user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException("cannot get user from DB"));
 
@@ -66,7 +67,7 @@ public class CreateAdvertisementService {
         var insertedAdvertisement = advertisementRepository.save(advertisement);
 
         // -------------------------
-        // EMAIL CREATION
+        //  EMAIL CREATION
         // -------------------------
         var tokenWithAdvertisement = advertisementActivationTokenService.prepareToken(insertedAdvertisement.getId());
         System.out.println("Advertisement activation token for address " + user.getEmail() + " has been generated");
