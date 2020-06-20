@@ -19,7 +19,7 @@ public class AdvertisementActivationTokenService {
     private final TokenRepository tokenRepository;
     private final AdvertisementRepository advertisementRepository;
 
-    @Value("{tokens.mail.expiration.time.minutes}")
+    @Value("${tokens.mail.expiration.time.minutes}")
     private Integer tokenValidationTimeInMinutes;
 
     public Token prepareToken(Long advertisementId) {
